@@ -45,4 +45,20 @@ app.patch('/withdraw/:agencia/:conta/:valor', async (req, res) => {
     }
 })
 
+// Task item six.
+app.get('/balance/:agencia/:conta', async (req, res) => {
+    try {
+        const {agencia, conta} = req.params;
+        const account = await accountModel.findOne({$and: [{agencia}, {conta}]});
+        if (!account) {
+            res.status(404).send('Account not found');
+        } else {
+            res.status(200).send(account.balance.toString());
+        }
+    } catch  (error) {
+        console.log('error => ', error)
+        res.status(500).send();
+    }
+})
+
 export {app as accountRouter};
