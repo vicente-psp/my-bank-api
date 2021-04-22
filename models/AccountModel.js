@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const accountSchema = new Schema({
   agencia: { 
-    type: String,
+    type: Number,
     require: true
   },
   conta: { 
