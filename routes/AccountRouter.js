@@ -82,8 +82,8 @@ app.delete('/:agencia/:conta', async (req, res) => {
         if (!account) {
             res.status(404).send('Account not found');
         } else {
-            const agencias = await accountModel.find({agencia}, {_id: 1});
-            res.status(200).send(agencias.length.toString());
+            const count = await accountModel.countDocuments({agencia}, (_err, count) => count);
+            res.status(200).send(count.toString());
         }
     } catch  (error) {
         console.log('error => ', error)
