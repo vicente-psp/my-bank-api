@@ -5,20 +5,20 @@ const Schema = mongoose.Schema;
 const accountSchema = new Schema({
   agencia: { 
     type: Number,
-    require: true
+    required: true
   },
   conta: { 
     type: Number,
-    require: true
+    required: true
   },
   name: {
     type: String,
-    require: true
+    required: true
   },
   balance: {
      type: Number,
      min: 0,
-     require: true
+     required: true
   }
 });
 
