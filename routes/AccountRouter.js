@@ -142,5 +142,89 @@ app.get('/balance-average/:agencia', async (req, res) => {
     }
 })
 
+// Task item ten.
+app.get('/lowest-balances/:limit', async (req, res) => {
+    try {
+        const {limit} = req.params;
+        
+        let accounts = await accountModel
+                                .find({}, {_id: 0, agencia: 1, conta: 1, balance: 1})
+                                .sort({balance: 1})
+                                .limit((limit * 1));
+        accounts = accounts
+            .filter(obj => !isNullOrUndefined(obj));
+        res.status(200).send(accounts);
+    } catch  (error) {
+        console.log('error => ', error)
+        res.status(500).send();
+    }
+})
+
+// Task item eleven.
+app.get('/biggest-balances/:limit', async (req, res) => {
+    try {
+        const {limit} = req.params;
+        
+        let accounts = await accountModel
+            .find({}, {_id: 0, agencia: 1, conta: 1, name: 1, balance: 1})
+            .sort({balance: -1})
+            .limit((limit * 1));
+        accounts = accounts.filter(obj => !isNullOrUndefined(obj));
+        res.status(200).send(accounts);
+    } catch  (error) {
+        console.log('error => ', error)
+        res.status(500).send();
+    }
+})
+
+// Task item twelve.
+app.get('/migrate-larger-balances', async (req, res) => {
+    try {
+        const agencias = await accountModel.distinct('agencia', {});
+
+        for (const agencia of agencias) {
+            const account = await accountModel
+                .findOne({agencia}, {})
+                .sort({balance: -1})
+                .limit(1);
+
+            if (!isNullOrUndefined(account)) {
+                account.agencia = 99;
+                await account.save();
+            }
+        }
+        
+        const accounts = await accountModel.find({agencia: 99}, {});
+
+        res.status(200).send(accounts);
+    } catch  (error) {
+        console.log('error => ', error)
+        res.status(500).send();
+    }
+})
+
+
+// find by name.
+app.get('/:name', async (req, res) => {
+    try {
+        const {name} = req.params;
+        
+        let accounts = await accountModel.find({name}, {});
+        accounts = accounts
+            .filter(obj => !isNullOrUndefined(obj));
+        res.status(200).send(accounts);
+    } catch  (error) {
+        console.log('error => ', error)
+        res.status(500).send();
+    }
+})
+
+
+
+const isNullOrUndefined = (obj) => {
+    return obj.agencia === null || obj.agencia === undefined;
+}
+
+
 
 export {app as accountRouter};
