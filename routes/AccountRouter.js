@@ -210,8 +210,19 @@ app.get('/:name', async (req, res) => {
         const {name} = req.params;
         
         let accounts = await accountModel.find({name}, {});
-        accounts = accounts
-            .filter(obj => !isNullOrUndefined(obj));
+        accounts = accounts.filter(obj => !isNullOrUndefined(obj));
+        res.status(200).send(accounts);
+    } catch  (error) {
+        console.log('error => ', error)
+        res.status(500).send();
+    }
+})
+
+// find all.
+app.get('', async (_req, res) => {
+    try {
+        let accounts = await accountModel.find({}, {});
+        accounts = accounts.filter(obj => !isNullOrUndefined(obj));
         res.status(200).send(accounts);
     } catch  (error) {
         console.log('error => ', error)
